@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Robot Explorador - Mina</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>🤖 Robot Explorador</h1>
+        <p>Monitoreo de mina subterránea</p>
+
+        <div id="estado" class="desconectado">
+            🔴 ESP32 DESCONectado
+        </div>
+    </header>
+
+    <main>
+
+        <!-- SENSORES -->
+        <section class="panel">
+            <h2>📊 Sensores</h2>
+
+            <div class="sensores">
+
+                <div class="sensor">
+                    <span>🌡️</span>
+                    <h3>Temperatura</h3>
+                    <p id="temperatura">-- °C</p>
+                </div>
+
+                <div class="sensor">
+                    <span>💧</span>
+                    <h3>Humedad</h3>
+                    <p id="humedad">-- %</p>
+                </div>
+
+                <div class="sensor">
+                    <span>📏</span>
+                    <h3>Distancia</h3>
+                    <p id="distancia">-- cm</p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- CONTROL DEL ROBOT -->
+        <section class="panel">
+
+            <h2>🎮 Control del robot</h2>
+
+            <div class="controles">
+
+                <button onclick="moverRobot('adelante')" class="btn-movimiento">
+                    ↑
+                    <small>AVANZAR</small>
+                </button>
+
+                <div class="fila">
+
+                    <button onclick="moverRobot('izquierda')" class="btn-movimiento">
+                        ←
+                        <small>IZQUIERDA</small>
+                    </button>
+
+                    <button onclick="moverRobot('stop')" class="btn-stop">
+                        ■
+                        <small>STOP</small>
+                    </button>
+
+                    <button onclick="moverRobot('derecha')" class="btn-movimiento">
+                        →
+                        <small>DERECHA</small>
+                    </button>
+
+                </div>
+
+                <button onclick="moverRobot('atras')" class="btn-movimiento">
+                    ↓
+                    <small>RETROCEDER</small>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- SERVO -->
+        <section class="panel">
+
+            <h2>📷 Control de cámara / Servo</h2>
+
+            <div class="servo">
+
+                <button onclick="moverServo(0)">0°</button>
+                <button onclick="moverServo(45)">45°</button>
+                <button onclick="moverServo(90)">90°</button>
+                <button onclick="moverServo(135)">135°</button>
+                <button onclick="moverServo(180)">180°</button>
+
+            </div>
+
+            <p class="angulo">
+                Ángulo actual:
+                <strong id="anguloServo">90°</strong>
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>Robot de monitoreo en mina subterránea</p>
+        <p>ESP32 + IoT</p>
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
