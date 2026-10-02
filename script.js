@@ -6,8 +6,8 @@ let anguloActual = 90;
 let ultimoMensaje = 0;
 
 const MQTT_URL  = "wss://d825528a.ala.us-east-1.emqxsl.com:8084/mqtt";
-const MQTT_USER = "web";
-const MQTT_PASS = "TU_CLAVE";
+const MQTT_USER = "ALEX";
+const MQTT_PASS = "12345678";
 
 const T_SENSORES = "robot/sensores";
 const T_CMD      = "robot/cmd";
