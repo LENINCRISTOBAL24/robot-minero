@@ -50,6 +50,27 @@
         </section>
 
 
+        <!-- CAMARA -->
+        <section class="panel">
+
+            <h2>📹 Cámara</h2>
+
+            <img id="camara" alt="Video de la cámara"
+                 style="width:100%; max-width:480px; min-height:120px; background:#000; border-radius:8px;">
+
+            <div class="servo">
+                <button onclick="camara('video_on')">▶ Video</button>
+                <button onclick="camara('video_off')">⏸ Detener</button>
+                <button onclick="camara('foto')">📸 Foto</button>
+            </div>
+
+            <p class="angulo">Última foto:</p>
+            <img id="foto" alt="Foto"
+                 style="width:100%; max-width:480px; min-height:60px; background:#000; border-radius:8px;">
+
+        </section>
+
+
         <!-- CONTROL DEL ROBOT -->
         <section class="panel">
 
@@ -85,6 +106,20 @@
                     ↓
                     <small>RETROCEDER</small>
                 </button>
+
+                <div class="fila">
+
+                    <button onclick="moverRobot('auto')" class="btn-movimiento">
+                        🤖
+                        <small>AUTOMÁTICO</small>
+                    </button>
+
+                    <button onclick="moverRobot('manual')" class="btn-movimiento">
+                        🕹️
+                        <small>MANUAL</small>
+                    </button>
+
+                </div>
 
             </div>
 
