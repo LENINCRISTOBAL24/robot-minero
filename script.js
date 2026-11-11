@@ -5,7 +5,7 @@
 let anguloActual = 90;
 let ultimoMensaje = 0;
 
-const MQTT_URL  = "wss://://emqxsl.com";
+const MQTT_URL  = "d825528a.ala.us-east-1.emqxsl.com";
 const MQTT_USER = "ALEX";
 const MQTT_PASS = "12345678";
 
