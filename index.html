@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Robot Explorador - Mina</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -49,6 +47,32 @@
             </div>
         </section>
 
+        <!-- VISIÓN IA Y BRÚJULA -->
+        <section class="panel">
+            <h2>🧠 Visión IA y Brújula</h2>
+
+            <div class="sensores">
+
+                <div class="sensor">
+                    <span>👁️</span>
+                    <h3>Detección IA</h3>
+                    <p id="ia-clase">--</p>
+                </div>
+
+                <div class="sensor">
+                    <span>🧭</span>
+                    <h3>Brújula</h3>
+                    <p id="ia-rumbo">-- °</p>
+                </div>
+
+                <div class="sensor">
+                    <span>⚙️</span>
+                    <h3>Decisión</h3>
+                    <p id="ia-accion">STOP</p>
+                </div>
+
+            </div>
+        </section>
 
         <!-- CAMARA -->
         <section class="panel">
@@ -69,7 +93,6 @@
                  style="width:100%; max-width:480px; min-height:60px; background:#000; border-radius:8px;">
 
         </section>
-
 
         <!-- CONTROL DEL ROBOT -->
         <section class="panel">
@@ -125,7 +148,6 @@
 
         </section>
 
-
         <!-- SERVO -->
         <section class="panel">
 
@@ -150,16 +172,15 @@
 
     </main>
 
-
     <footer>
         <p>Robot de monitoreo en mina subterránea</p>
         <p>ESP32 + IoT</p>
     </footer>
 
-
     <!-- Librería MQTT (debe ir antes de script.js) -->
-    <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+    <script src="https://unpkg.com"></script>
     <script src="script.js"></script>
 
 </body>
 </html>
+
