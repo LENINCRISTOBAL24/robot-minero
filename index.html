@@ -44,10 +44,16 @@
                     <p id="distancia">-- cm</p>
                 </div>
 
+                <div class="sensor">
+                    <span>☁️</span>
+                    <h3>Gas</h3>
+                    <p id="gas">--</p>
+                </div>
+
             </div>
         </section>
 
-        <!-- VISIÓN IA Y BRÚJULA -->
+        <!-- VISION IA Y BRUJULA -->
         <section class="panel">
             <h2>🧠 Visión IA y Brújula</h2>
 
@@ -68,7 +74,7 @@
                 <div class="sensor">
                     <span>⚙️</span>
                     <h3>Decisión</h3>
-                    <p id="ia-accion">STOP</p>
+                    <p id="ia-accion">DETENIDO</p>
                 </div>
 
             </div>
@@ -174,12 +180,11 @@
 
     <footer>
         <p>Robot de monitoreo en mina subterránea</p>
-        <p>ESP32 + IoT</p>
+        <p>ESP32 + LoRa + IoT</p>
     </footer>
 
     <!-- Librería MQTT (debe ir antes de script.js) -->
- <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+    <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
-
