@@ -1,3 +1,7 @@
+// ========================================
+// CONFIGURACIÓN DEL ROBOT
+// ========================================
+
 let anguloActual = 90;
 let ultimoMensaje = 0;
 
@@ -11,6 +15,12 @@ const T_SERVO    = "robot/servo";
 const T_VIDEO    = "robot/camara";
 const T_FOTO     = "robot/foto";
 const T_CAM_CMD  = "robot/camara/cmd";
+const T_IA       = "robot/ia";
+
+
+// ========================================
+// CONEXIÓN MQTT
+// ========================================
 
 const client = mqtt.connect(MQTT_URL, {
     username: MQTT_USER,
@@ -21,20 +31,60 @@ const client = mqtt.connect(MQTT_URL, {
 
 client.on("connect", () => {
     console.log("MQTT conectado al broker");
-    client.subscribe([T_SENSORES, T_VIDEO, T_FOTO]);
+    client.subscribe([T_SENSORES, T_VIDEO, T_FOTO, T_IA]);
 });
 
-client.on("error", (err) => console.log("Error MQTT:", err.message));
-client.on("close", () => cambiarEstado(false));
+client.on("error", (err) => {
+    console.log("Error MQTT:", err.message);
+});
+
+client.on("close", () => {
+    cambiarEstado(false);
+});
 
 client.on("message", (topic, msg) => {
-    if (topic === T_VIDEO) { mostrarImagen("camara", msg); return; }
-    if (topic === T_FOTO)  { mostrarImagen("foto", msg); return; }
 
+    // Imágenes de la cámara (datos binarios JPEG)
+    if (topic === T_VIDEO) {
+        mostrarImagen("camara", msg);
+        return;
+    }
+    if (topic === T_FOTO) {
+        mostrarImagen("foto", msg);
+        return;
+    }
+
+    // Detección de IA + brújula
+    if (topic === T_IA) {
+        try {
+            const ia = JSON.parse(msg.toString());
+            const nombres = {
+                "F": "AVANZAR",
+                "S": "DETENIDO",
+                "L": "IZQUIERDA",
+                "R": "DERECHA"
+            };
+
+            document.getElementById("ia-clase").textContent =
+                ia.clase ? ia.clase + " (" + ia.conf + "%)" : "--";
+
+            document.getElementById("ia-rumbo").textContent =
+                ia.rumbo + "°";
+
+            document.getElementById("ia-accion").textContent =
+                nombres[ia.accion] || ia.accion;
+
+        } catch (e) {
+            console.log("Dato IA inválido:", msg.toString());
+        }
+        return;
+    }
+
+    // Telemetría de sensores
     if (topic === T_SENSORES) {
         try {
             const d = JSON.parse(msg.toString());
-            actualizarSensores(d.temp, d.hum, d.dist);
+            actualizarSensores(d.temp, d.hum, d.dist, d.gas);
             ultimoMensaje = Date.now();
             cambiarEstado(true);
         } catch (e) {
@@ -43,45 +93,119 @@ client.on("message", (topic, msg) => {
     }
 });
 
+// Si el ESP32 no envía datos en 6 s, se marca como desconectado
 setInterval(() => {
-    if (Date.now() - ultimoMensaje > 6000) cambiarEstado(false);
+    if (Date.now() - ultimoMensaje > 6000) {
+        cambiarEstado(false);
+    }
 }, 2000);
 
+
+// ========================================
+// ESTADO DE CONEXIÓN
+// ========================================
+
 function cambiarEstado(conectado) {
+
     const estado = document.getElementById("estado");
+
     if (conectado) {
+
         estado.textContent = "🟢 ESP32 CONECTADO";
+
         estado.classList.remove("desconectado");
         estado.classList.add("conectado");
+
     } else {
+
         estado.textContent = "🔴 ESP32 DESCONECTADO";
+
         estado.classList.remove("conectado");
         estado.classList.add("desconectado");
+
     }
 }
 
+
+// ========================================
+// CÁMARA
+// ========================================
+
 function mostrarImagen(idImg, datos) {
+
     const img = document.getElementById(idImg);
     const anterior = img.src;
-    img.src = URL.createObjectURL(new Blob([datos], { type: "image/jpeg" }));
-    if (anterior.startsWith("blob:")) URL.revokeObjectURL(anterior);
+
+    const blob = new Blob([datos], { type: "image/jpeg" });
+    img.src = URL.createObjectURL(blob);
+
+    if (anterior.startsWith("blob:")) {
+        URL.revokeObjectURL(anterior);
+    }
 }
 
-function camara(orden) { client.publish(T_CAM_CMD, orden); }
+function camara(orden) {
+
+    console.log("Cámara:", orden);
+
+    client.publish(T_CAM_CMD, orden);
+}
+
+
+// ========================================
+// CONTROL DEL SERVO
+// ========================================
 
 function moverServo(angulo) {
+
     anguloActual = angulo;
-    document.getElementById("anguloServo").textContent = angulo + "°";
+
+    document.getElementById("anguloServo").textContent =
+        angulo + "°";
+
+    console.log("Servo:", angulo, "grados");
+
     client.publish(T_SERVO, String(angulo));
 }
 
-function moverRobot(comando) { client.publish(T_CMD, comando); }
 
-function actualizarSensores(temp, hum, distancia) {
-    document.getElementById("temperatura").textContent = temp + " °C";
-    document.getElementById("humedad").textContent = hum + " %";
-    document.getElementById("distancia").textContent = distancia + " cm";
+// ========================================
+// CONTROL DE MOTORES
+// ========================================
+
+function moverRobot(comando) {
+
+    console.log("Comando:", comando);
+
+    // comandos: adelante, atras, izquierda, derecha, stop, auto, manual
+    client.publish(T_CMD, comando);
 }
 
+
+// ========================================
+// DATOS DE SENSORES
+// ========================================
+
+function actualizarSensores(temp, hum, distancia, gas) {
+
+    document.getElementById("temperatura").textContent =
+        temp + " °C";
+
+    document.getElementById("humedad").textContent =
+        hum + " %";
+
+    document.getElementById("distancia").textContent =
+        distancia + " cm";
+
+    document.getElementById("gas").textContent =
+        (gas === undefined ? "--" : gas);
+}
+
+
+// ========================================
+// ESTADO INICIAL
+// ========================================
+
 cambiarEstado(false);
-actualizarSensores("--", "--", "--");
+
+actualizarSensores("--", "--", "--", "--");
